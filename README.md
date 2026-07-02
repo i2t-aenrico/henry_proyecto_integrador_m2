@@ -19,7 +19,7 @@ Pipeline de datos (build_index.py)
     +-- load_document()        Lee data/faq_document.txt
     +-- chunk_document()       Chunking por párrafo (chunking.py)
     +-- embed_texts()          Embeddings OpenAI o Sentence-Transformers
-    +-- save_index()           Guarda chunks + vectores en outputs/index/faq_index.json
+    +-- save_index()           Guarda chunks + vectores en outputs/index/{dataset}_index.json
 
 Pipeline de consulta (query.py)
     |
@@ -144,26 +144,62 @@ Requiere haber generado al menos un índice antes con `build_index.py`.
 ## Requisitos
 
 - Python >= 3.11
-- [uv](https://docs.astral.sh/uv/) (gestor de entornos y dependencias)
 - API key del proveedor de embeddings elegido (si es `openai`)
 - API key del proveedor de generación elegido (Anthropic u OpenAI)
+- Gestor de dependencias: [uv](https://docs.astral.sh/uv/) (recomendado) o `pip` con un entorno virtual estándar (ver "Instalación" más abajo)
 
 ---
 
 ## Configuración
+
+Copiá la plantilla de variables de entorno y completá tus API keys:
 
 ```bash
 cp .env.example .env
 # Editar .env: elegir EMBEDDING_PROVIDER, LLM_PROVIDER y completar las API keys
 ```
 
+Como alternativa a editar `.env`, también podés exportar las variables directamente
+en la terminal antes de ejecutar los scripts (útil para pruebas rápidas):
+
+```bash
+# Linux / macOS
+export OPENAI_API_KEY=your-key-here
+export ANTHROPIC_API_KEY=your-key-here
+
+# Windows (PowerShell)
+$env:OPENAI_API_KEY = "your-key-here"
+$env:ANTHROPIC_API_KEY = "your-key-here"
+```
+
 ---
 
 ## Instalación
 
+### Opción A — con `uv` (recomendada)
+
 ```bash
 uv sync
 ```
+
+Esto crea el entorno virtual e instala todas las dependencias declaradas en
+`pyproject.toml`, incluyendo las de test.
+
+### Opción B — con `pip` y un entorno virtual estándar
+
+```bash
+python -m venv .venv
+
+# Activar el entorno virtual
+source .venv/bin/activate       # Linux / macOS
+.venv\Scripts\activate          # Windows (PowerShell o CMD)
+
+pip install -r requirements.txt
+```
+
+> **Nota:** si usás la Opción B, reemplazá `uv run python` por `python` en todos
+> los comandos de las secciones siguientes (por ejemplo, `python src/build_index.py`
+> en vez de `uv run python src/build_index.py`).
 
 ---
 
