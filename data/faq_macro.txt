@@ -1,0 +1,45 @@
+FAQ — Banco Macro (operaciones y canales de atención)
+
+Este documento reúne las preguntas frecuentes publicadas por Banco Macro sobre generación de claves y tokens, tarjetas de débito y crédito, préstamos, CBU y otras operaciones habituales. Su objetivo es servir de base de conocimiento para un sistema de preguntas y respuestas automatizado.
+
+1. ¿Cómo genero el Token de Seguridad?
+El Token es el método de seguridad que reemplaza a las preguntas de seguridad tradicionales, y funciona desde el propio celular generando códigos de 6 dígitos que se piden al operar por la App Macro o por Banca Internet. Para generarlo y activarlo hay que ir a un cajero automático Banelco, disponible las 24 horas, e ingresar por la opción de Claves, elegir la generación del Token de Seguridad, cargar el documento y definir una clave de 6 dígitos, confirmándola por segunda vez. Conviene guardar el ticket del cajero y recordar la clave generada, porque después hay que terminar de activarlo desde la App Macro dentro de las 24 horas, ingresando esos mismos datos antes de loguearse.
+
+2. ¿Dónde consulto mi CBU?
+El CBU (Clave Bancaria Uniforme) es el número que identifica una cuenta bancaria. Se puede consultar ingresando con usuario y clave a Banca Internet o a la App Macro, entrando a la cuenta y buscando la opción "Mi CBU". Si la persona todavía no está registrada en los canales digitales, el sistema le pedirá algunas preguntas de validación al intentar ingresar por primera vez. También se puede consultar el CBU directamente desde cualquier cajero automático.
+
+3. Tengo problemas con las preguntas de seguridad en Banca Internet, ¿qué hago?
+Si las preguntas de seguridad de Banca Internet quedaron bloqueadas, igualmente se puede seguir pagando servicios y haciendo transferencias desde la App Macro sin inconvenientes. Para desbloquear esas preguntas de todos modos, hay que llamar con la clave telefónica de 6 dígitos al centro de atención telefónica, opción 0, de lunes a viernes de 7 a 20 horas.
+
+4. No tengo clave para Banca Internet ni para la App Macro, ¿cómo la obtengo?
+La clave se puede generar en el momento desde los propios canales digitales o desde un cajero automático, siguiendo el asistente de generación de claves disponible en esos medios.
+
+5. Se me bloqueó la clave de Banca Internet y de la App Macro, ¿cómo la desbloqueo?
+Al igual que para generarla, el desbloqueo también puede hacerse desde Banca Internet, la App Macro o un cajero automático, a través de la opción de gestión de claves.
+
+6. Bloqueé el PIN de mi tarjeta de débito, ¿cómo lo desbloqueo?
+El desbloqueo se hace desde la App Macro o Banca Internet, dentro de la opción "Gestión de Claves". Para completar este paso es necesario tener el Token de Seguridad activo; si todavía no fue activado, primero hay que generarlo siguiendo el procedimiento correspondiente.
+
+7. No tengo habilitada la tarjeta de débito, ¿qué puedo hacer?
+Todas las tarjetas que entrega el banco salen habilitadas de fábrica. Si de todos modos se presenta un problema, la solución es hacer un blanqueo del PIN desde la opción "Gestión de Claves" en la App Macro o Banca Internet. Si la persona no tiene clave para esos canales digitales, primero debe generarla.
+
+8. No tengo la tarjeta de débito encima y necesito extraer dinero, ¿se puede?
+Sí, tanto la App Macro como Banca Internet permiten generar una Orden de Extracción para retirar dinero en un cajero automático sin necesidad de tener la tarjeta física en el momento.
+
+9. Siempre pagaba mi tarjeta o préstamo por ventanilla, ¿cómo lo hago ahora?
+La tarjeta de crédito puede pagarse por la App Macro, Banca Internet, o a través de Pago Mis Cuentas / Pagos Link. Los préstamos también admiten pago en la sucursal por caja, pero requieren sacar turno online previo. La cancelación total de un préstamo, en cambio, siempre es un trámite presencial con turno.
+
+10. Quiero ver el resumen de mi tarjeta de crédito, ¿dónde lo consulto?
+El resumen puede consultarse desde la App Macro o desde Banca Internet. Si la persona no cuenta todavía con la clave de estos canales, primero debe generarla.
+
+11. ¿Puedo pedir la devolución de un pago de tarjeta ya debitado?
+Sí, si el resumen de la tarjeta ya fue debitado se puede solicitar la devolución de ese importe en una sucursal, con turno online previo. El pedido debe hacerse dentro de los 30 días corridos desde la fecha del débito, y el dinero se acredita en la cuenta en un plazo máximo de 72 horas hábiles. Es importante saber que ese importe vuelve a sumarse como deuda en el resumen siguiente. Si el pedido se hace después del cierre del resumen, la deuda que se busca dejar impaga se suma directamente al saldo del próximo resumen.
+
+12. Ya pagué la tarjeta o pagué un monto menor al total, ¿qué puedo hacer?
+Si el débito ya se hizo, o si el pago se realizó por otro canal y se quiere pedir un reverso, el trámite puede iniciarse por Banca Internet o en una sucursal con turno previo. Es importante tener en cuenta que reversar un pago genera intereses de financiación sobre el monto que quede impago, y que la tarjeta se inhibe automáticamente si no se cubre el pago mínimo, por lo que se recomienda evitar dejarlo impago.
+
+13. Quiero enviarle dinero a otra persona, ¿cómo lo hago sin ir a una sucursal?
+Se puede usar la función de Extracción sin Tarjeta de Débito disponible tanto en la App Macro como en Banca Internet, que permite que otra persona retire el dinero en un cajero sin necesidad de tener una tarjeta física.
+
+14. ¿Los cajeros automáticos cobran comisión?
+Según lo dispuesto por el Banco Central de la República Argentina desde el 1 de abril de 2021, las operaciones en cajeros automáticos volvieron a tener costo. La excepción son los titulares de tarjetas de débito asociadas a cuentas sueldo, jubilaciones o planes sociales, que mantienen el uso gratuito de cajeros de cualquier banco y red sobre el monto total de su salario, jubilación o prestación social.

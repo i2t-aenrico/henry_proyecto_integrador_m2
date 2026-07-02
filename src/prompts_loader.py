@@ -10,7 +10,9 @@ _PROMPTS_DIR = Path(__file__).resolve().parent.parent / "prompts"
 sys.path.insert(0, str(_PROMPTS_DIR))
 
 from prompts import (  # noqa: E402
+    FUENTES_LEGIBLES,
     SYSTEM_ASISTENTE,
+    SYSTEM_ASISTENTE_MULTI,
     TEMPLATE_USUARIO,
     formatear_chunks,
     SYSTEM_EVALUADOR,
@@ -18,7 +20,9 @@ from prompts import (  # noqa: E402
 )
 
 __all__ = [
+    "FUENTES_LEGIBLES",
     "SYSTEM_ASISTENTE",
+    "SYSTEM_ASISTENTE_MULTI",
     "TEMPLATE_USUARIO",
     "formatear_chunks",
     "SYSTEM_EVALUADOR",

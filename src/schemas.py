@@ -11,6 +11,7 @@ class ChunkRelated(BaseModel):
     chunk_id: str
     score: float
     text: str
+    source: str | None = None
 
 
 class RespuestaRAG(BaseModel):

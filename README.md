@@ -85,6 +85,62 @@ información suficiente — ver más abajo la sección de métricas.
 
 ---
 
+## Múltiples bases de FAQ
+
+Además del FAQ original de trámites de Santa Fe, el repositorio incluye otras
+bases de ejemplo para probar el sistema con distintos dominios: `data/faq_agn.txt`
+(Archivo General de la Nación), `data/faq_yam.txt` (tienda de joyería), `data/faq_hothaus.txt`
+(estudio de vidrio) y `data/faq_macro.txt` (Banco Macro). Cada una se indexa por
+separado (ver sección "Ejecución"), y `query.py` permite consultar una sola o todas
+a la vez con `--dataset all`.
+
+Cuando se consulta con `--dataset all`, la búsqueda se hace contra todos los
+índices disponibles en `outputs/index/`, se combinan los resultados por
+similitud (deduplicando por `source` + `chunk_id` para no repetir chunks si
+hay índices superpuestos) y se usa un prompt de sistema distinto
+(`SYSTEM_ASISTENTE_MULTI`) que le pide al modelo identificar explícitamente
+de qué organización proviene cada dato usado en la respuesta (por ejemplo:
+"Según Banco Macro..."). El campo `source` de cada chunk queda visible en el
+JSON de salida para poder auditar la procedencia.
+
+### Detalles de la recuperación (retrieval)
+
+- **Similitud**: cada chunk recuperado trae su `score` de similitud coseno
+  (entre -1 y 1; cuanto más alto, más relevante). No es una distancia sino
+  una similitud: los valores más altos indican mejor match.
+- **Reranking**: no hay una segunda etapa de reranking (cross-encoder o
+  LLM-reranker). Es un único paso de embedding + similitud coseno + top-k,
+  suficiente para el tamaño de corpus de este proyecto (ver "Método de
+  búsqueda" más arriba).
+- **Deduplicación**: solo aplica en el modo `--dataset all`, donde se
+  descartan chunks repetidos (mismo `source` + `chunk_id`) al fusionar los
+  resultados de varios índices. Dentro de un único dataset no hace falta,
+  porque cada `chunk_id` es único por construcción.
+
+---
+
+## Interfaz web (Gradio)
+
+Para no depender de la terminal, hay una interfaz web mínima construida con
+[Gradio](https://www.gradio.app/):
+
+```bash
+uv run python src/app.py
+```
+
+Abre un servidor local (por defecto en `http://127.0.0.1:7860`) con:
+
+- Un campo de texto para la **pregunta**.
+- Un selector de **modelo/fuente**: cada FAQ indexado individualmente, o
+  "Todos los FAQ" para buscar en todas las bases a la vez.
+- Un checkbox opcional para correr el **agente evaluador** sobre la respuesta.
+- El resultado, mostrando la respuesta generada y el detalle de los chunks
+  usados (fuente, similitud y fragmento de texto).
+
+Requiere haber generado al menos un índice antes con `build_index.py`.
+
+---
+
 ## Requisitos
 
 - Python >= 3.11
@@ -114,12 +170,37 @@ uv sync
 ## Ejecución
 
 ```bash
-# 1. Construir el índice (chunking + embeddings)
+# 1. Construir el índice (chunking + embeddings) para el FAQ por defecto
 uv run python src/build_index.py
 
 # 2. Consultar el FAQ
 uv run python src/query.py -q "¿Cómo saco turno para renovar la licencia de conducir?"
 ```
+
+### Indexar y consultar varias bases de FAQ
+
+```bash
+# Indexar cada base por separado (una vez, o cada vez que cambien los .txt)
+uv run python src/build_index.py --input data/faq_document.txt
+uv run python src/build_index.py --input data/faq_agn.txt
+uv run python src/build_index.py --input data/faq_yam.txt
+uv run python src/build_index.py --input data/faq_hothaus.txt
+uv run python src/build_index.py --input data/faq_macro.txt
+
+# Consultar una base puntual
+uv run python src/query.py -q "¿Cómo pago mi tarjeta de crédito?" --dataset faq_macro
+
+# Consultar TODAS las bases a la vez
+uv run python src/query.py -q "¿Cómo pago mi tarjeta de crédito?" --dataset all
+```
+
+### Interfaz web
+
+```bash
+uv run python src/app.py
+```
+
+Ver detalles en la sección "Interfaz web (Gradio)" más arriba.
 
 ### Salida de ejemplo
 
@@ -128,7 +209,7 @@ uv run python src/query.py -q "¿Cómo saco turno para renovar la licencia de co
   "user_question": "¿Cómo saco turno para renovar la licencia de conducir?",
   "system_answer": "Podés sacar el turno de forma online desde la sección de turnos del sitio municipal...",
   "chunks_related": [
-    {"chunk_id": "chunk_005", "score": 0.78, "text": "5. ¿Qué diferencia hay..."}
+    {"chunk_id": "chunk_005", "score": 0.78, "text": "5. ¿Qué diferencia hay...", "source": "faq_document.txt"}
   ]
 }
 ```
@@ -215,13 +296,18 @@ Los tests no consumen tokens ni requieren red (no llaman a ninguna API):
 ```
 m2p1-faq-santafe/
 ├── data/
-│   └── faq_document.txt        FAQ de trámites de Santa Fe (~1625 palabras)
+│   ├── faq_document.txt        FAQ de trámites de Santa Fe (~1625 palabras)
+│   ├── faq_agn.txt             FAQ del Archivo General de la Nación
+│   ├── faq_yam.txt             FAQ de Yam (joyería, envíos y devoluciones)
+│   ├── faq_hothaus.txt         FAQ de Hothaus (estudio de vidrio, Australia)
+│   └── faq_macro.txt           FAQ de Banco Macro (operaciones y canales)
 ├── src/
 │   ├── chunking.py             Chunking por párrafo con reglas de tamaño
 │   ├── embeddings.py           Embeddings OpenAI / Sentence-Transformers
 │   ├── vector_store.py         Índice en memoria + búsqueda coseno
-│   ├── build_index.py          Pipeline de datos (entry point)
-│   ├── query.py                Pipeline de consulta (entry point, con --evaluate)
+│   ├── build_index.py          Pipeline de datos (entry point, un índice por FAQ)
+│   ├── query.py                Pipeline de consulta (entry point, --dataset / all / --evaluate)
+│   ├── app.py                  Interfaz web simple (Gradio)
 │   ├── llm.py                  Llamada al LLM (Anthropic / OpenAI)
 │   ├── evaluator.py            Agente evaluador (bonus, sprint 2)
 │   ├── evaluate_batch.py       Evalúa en lote un archivo de ejemplos (entry point)
@@ -230,9 +316,9 @@ m2p1-faq-santafe/
 │   ├── schemas.py              Contratos Pydantic
 │   └── settings.py             Configuración desde .env
 ├── prompts/
-│   └── prompts.py               Prompts del sistema: asistente y evaluador
+│   └── prompts.py               Prompts del sistema: asistente (único y multi-fuente) y evaluador
 ├── outputs/
-│   ├── index/faq_index.json    Índice generado por build_index.py
+│   ├── index/{dataset}_index.json    Un índice por FAQ, generado por build_index.py
 │   ├── sample_queries.json     3+ ejemplos de consulta-respuesta (sprint 1)
 │   └── sample_queries_evaluated.json  Mismos ejemplos + veredicto del evaluador
 ├── metrics/
