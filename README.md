@@ -1,0 +1,268 @@
+# Asistente de FAQ — Trámites de Santa Fe (RAG) — Proyecto Integrador Módulo 2
+
+Chatbot de preguntas frecuentes sobre trámites municipales y provinciales
+de Santa Fe. Aplica una arquitectura **RAG** (Retrieval-Augmented Generation):
+fragmenta un documento de FAQ en chunks, genera embeddings, indexa los
+vectores y responde preguntas del usuario recuperando los chunks más
+relevantes antes de generar la respuesta con un LLM. Devuelve siempre
+**JSON válido** con `user_question`, `system_answer` y `chunks_related`.
+Soporta múltiples proveedores de embeddings (OpenAI / Sentence-Transformers)
+y de generación (Anthropic / OpenAI).
+
+---
+
+## Arquitectura
+
+```
+Pipeline de datos (build_index.py)
+    |
+    +-- load_document()        Lee data/faq_document.txt
+    +-- chunk_document()       Chunking por párrafo (chunking.py)
+    +-- embed_texts()          Embeddings OpenAI o Sentence-Transformers
+    +-- save_index()           Guarda chunks + vectores en outputs/index/faq_index.json
+
+Pipeline de consulta (query.py)
+    |
+    +-- embed_query()          Embedding de la pregunta (mismo proveedor que el índice)
+    +-- search()               Búsqueda por similitud coseno (vector_store.py)
+    +-- build_prompt()         Ensambla contexto + procedencia (prompts/prompts.py)
+    +-- call_llm()             Generación con Anthropic u OpenAI (llm.py)
+    +-- registrar_metrica()    Log en metrics/metrics.csv y logs/queries.jsonl
+    +-- RespuestaRAG           Validación Pydantic del JSON de salida (schemas.py)
+```
+
+---
+
+## Decisiones técnicas
+
+### Estrategia de chunking: por párrafo
+
+El documento FAQ ya está estructurado en bloques de pregunta+respuesta
+separados por líneas en blanco. Cada bloque es una unidad semántica
+autocontenida: partirlo con una ventana de tamaño fijo rompería la relación
+entre la pregunta y su respuesta. Por eso se eligió **chunking por párrafo**,
+con dos reglas de seguridad:
+
+- Los párrafos por debajo de 50 tokens (título, introducción) se fusionan
+  con el siguiente para no generar chunks demasiado pequeños.
+- Si un párrafo superase los 500 tokens, se subdivide con una ventana de
+  tamaño fijo y solapamiento de ~40 tokens (fallback, no se activa con el
+  documento actual porque ningún bloque supera los 110 tokens).
+
+Con el documento de ejemplo (`data/faq_document.txt`, ~1625 palabras) esta
+estrategia genera **27 chunks**, todos entre 62 y 110 tokens.
+
+### Método de búsqueda: similitud coseno exacta (fuerza bruta)
+
+Con 27 chunks, un índice aproximado (ANN/FAISS) no aporta beneficio de
+performance y agrega complejidad innecesaria. Se implementó una búsqueda
+exacta por producto punto entre vectores normalizados (equivalente a
+similitud coseno) usando numpy. Es 100% precisa y evaluar los 27 vectores
+toma microsegundos. Si el corpus creciera a decenas de miles de chunks,
+el mismo `vector_store.py` podría reemplazarse por un índice FAISS sin
+tocar el resto del pipeline, porque `search()` es la única función que
+conocen `query.py` y `build_index.py`.
+
+### Embeddings: proveedor intercambiable (OpenAI / Sentence-Transformers)
+
+Controlado por `EMBEDDING_PROVIDER` en `.env`:
+
+| Proveedor | Modelo | Dimensiones | Requiere API key |
+|---|---|---|---|
+| `openai` | `text-embedding-3-small` | 1536 | Sí |
+| `local` | `sentence-transformers/all-MiniLM-L6-v2` | 384 | No (corre en CPU) |
+
+**Importante:** el mismo proveedor usado para indexar el corpus debe
+usarse para embeber las consultas. Si cambiás `EMBEDDING_PROVIDER`, hay
+que reconstruir el índice con `build_index.py`.
+
+### Generación: proveedor intercambiable (Anthropic / OpenAI)
+
+Controlado por `LLM_PROVIDER` en `.env`. El prompt (few-shot implícito por
+las reglas + contexto con procedencia) exige responder únicamente con lo
+que dicen los chunks recuperados, y declarar explícitamente cuando no hay
+información suficiente — ver más abajo la sección de métricas.
+
+---
+
+## Requisitos
+
+- Python >= 3.11
+- [uv](https://docs.astral.sh/uv/) (gestor de entornos y dependencias)
+- API key del proveedor de embeddings elegido (si es `openai`)
+- API key del proveedor de generación elegido (Anthropic u OpenAI)
+
+---
+
+## Configuración
+
+```bash
+cp .env.example .env
+# Editar .env: elegir EMBEDDING_PROVIDER, LLM_PROVIDER y completar las API keys
+```
+
+---
+
+## Instalación
+
+```bash
+uv sync
+```
+
+---
+
+## Ejecución
+
+```bash
+# 1. Construir el índice (chunking + embeddings)
+uv run python src/build_index.py
+
+# 2. Consultar el FAQ
+uv run python src/query.py -q "¿Cómo saco turno para renovar la licencia de conducir?"
+```
+
+### Salida de ejemplo
+
+```json
+{
+  "user_question": "¿Cómo saco turno para renovar la licencia de conducir?",
+  "system_answer": "Podés sacar el turno de forma online desde la sección de turnos del sitio municipal...",
+  "chunks_related": [
+    {"chunk_id": "chunk_005", "score": 0.78, "text": "5. ¿Qué diferencia hay..."}
+  ]
+}
+```
+
+Más ejemplos en `outputs/sample_queries.json`.
+
+---
+
+## Métricas y logging (base para el agente evaluador — sprint 2)
+
+Cada consulta queda registrada en dos archivos, pensados para que el
+**agente evaluador** (bonus, sprint 2) tenga todo el material necesario
+sin tener que instrumentar nada de nuevo:
+
+- `metrics/metrics.csv`: una fila por consulta (pregunta, si se respondió
+  o no, chunk principal recuperado, tokens, latencia, costo, proveedor).
+- `logs/queries.jsonl`: un JSON por línea con el detalle completo de cada
+  consulta, incluyendo las preguntas que el sistema **no pudo responder**
+  (`answered: false`), para poder auditarlas o pasárselas al evaluador.
+
+La detección de "no respondida" (`metrics_writer.was_answered`) es una
+heurística simple basada en frases del propio LLM ("no tengo información
+suficiente..."). El agente evaluador del sprint 2 (ver más abajo) es el
+criterio de calidad más robusto que complementa esta heurística.
+
+---
+
+## Sprint 2 — Agente evaluador (bonus)
+
+El agente evaluador (`src/evaluator.py`) recibe `user_question`,
+`system_answer` y `chunks_related`, y devuelve un puntaje de 0 a 10 con
+una justificación (`schemas.EvaluacionRespuesta`), usando un LLM como juez
+con un prompt propio (`prompts.SYSTEM_EVALUADOR`) que evalúa:
+
+1. **Fidelidad**: si la respuesta usa solo información de los chunks.
+2. **Cobertura**: si aprovecha la información relevante disponible.
+3. **Honestidad**: si reconoce cuando no hay información suficiente,
+   en vez de inventar una respuesta.
+4. **Claridad**: si es comprensible para alguien sin jerga administrativa.
+
+### Uso
+
+```bash
+# Evaluar una consulta puntual junto con la respuesta
+uv run python src/query.py -q "¿Cómo renuevo la licencia?" --evaluate
+
+# Evaluar en lote un archivo de ejemplos ya generado
+uv run python src/evaluate_batch.py --input outputs/sample_queries.json
+```
+
+Cada evaluación se registra en `metrics/evaluations.csv` y
+`logs/evaluations.jsonl`, con el mismo criterio de trazabilidad usado para
+las consultas (timestamp, tokens, latencia, costo).
+
+`outputs/sample_queries_evaluated.json` contiene los 3 ejemplos del sprint
+1 ya evaluados, como demostración del criterio del agente: las dos
+respuestas correctas puntúan 9+ por estar bien fundamentadas en los
+chunks, y la respuesta "no pude responder" ante la pregunta sobre el
+pasaporte también puntúa alto, porque reconocer la falta de información
+es el comportamiento correcto, no una falla.
+
+---
+
+## Tests
+
+```bash
+uv run pytest tests/ -v
+```
+
+Los tests no consumen tokens ni requieren red (no llaman a ninguna API):
+
+| Suite | Qué cubre |
+|---|---|
+| TestChunking | Rango de tokens por chunk, 20+ chunks sobre el documento real |
+| TestVectorStore | Orden por similitud, respeto de top_k, índice vacío |
+| TestSchemas | Validación Pydantic de `RespuestaRAG` |
+| TestMetrics | Detección de "no respondida", cálculo de costo |
+| TestEvaluator | Construcción del prompt, parseo de JSON, validación de rango 0-10 |
+
+---
+
+## Estructura del repositorio
+
+```
+m2p1-faq-santafe/
+├── data/
+│   └── faq_document.txt        FAQ de trámites de Santa Fe (~1625 palabras)
+├── src/
+│   ├── chunking.py             Chunking por párrafo con reglas de tamaño
+│   ├── embeddings.py           Embeddings OpenAI / Sentence-Transformers
+│   ├── vector_store.py         Índice en memoria + búsqueda coseno
+│   ├── build_index.py          Pipeline de datos (entry point)
+│   ├── query.py                Pipeline de consulta (entry point, con --evaluate)
+│   ├── llm.py                  Llamada al LLM (Anthropic / OpenAI)
+│   ├── evaluator.py            Agente evaluador (bonus, sprint 2)
+│   ├── evaluate_batch.py       Evalúa en lote un archivo de ejemplos (entry point)
+│   ├── prompts_loader.py       Carga los prompts desde prompts/
+│   ├── metrics_writer.py       Métricas, logging y evaluaciones
+│   ├── schemas.py              Contratos Pydantic
+│   └── settings.py             Configuración desde .env
+├── prompts/
+│   └── prompts.py               Prompts del sistema: asistente y evaluador
+├── outputs/
+│   ├── index/faq_index.json    Índice generado por build_index.py
+│   ├── sample_queries.json     3+ ejemplos de consulta-respuesta (sprint 1)
+│   └── sample_queries_evaluated.json  Mismos ejemplos + veredicto del evaluador
+├── metrics/
+│   ├── metrics.csv             Registro agregado de consultas
+│   └── evaluations.csv         Registro agregado de evaluaciones (sprint 2)
+├── logs/
+│   ├── queries.jsonl           Detalle completo por consulta
+│   └── evaluations.jsonl       Detalle completo por evaluación (sprint 2)
+├── tests/
+│   └── test_core.py            Suite de tests (sin LLM ni red)
+├── reports/
+│   └── PI_report.md            Informe técnico del proyecto
+├── pyproject.toml              Dependencias
+├── .env.example                Plantilla de variables de entorno
+└── README.md
+```
+
+---
+
+## Limitaciones conocidas
+
+- El índice vectorial es un archivo JSON en memoria: para corpus grandes
+  (decenas de miles de chunks) conviene migrar a FAISS u otra base
+  vectorial especializada, sin cambiar la interfaz de `vector_store.py`.
+- El agente evaluador (sprint 2) usa un LLM como juez: su puntaje es una
+  señal de calidad adicional, no una verdad absoluta. Para un caso de uso
+  crítico conviene contrastarlo periódicamente con revisión humana.
+- `outputs/sample_queries.json` y `outputs/sample_queries_evaluated.json`
+  incluidos en este repositorio fueron generados y verificados manualmente
+  durante el desarrollo (el entorno de build no tenía acceso de red a las
+  APIs de embeddings/LLM); al ejecutar `query.py` o `evaluate_batch.py`
+  con tus propias credenciales, ambos archivos se pueden regenerar con
+  respuestas y evaluaciones en vivo.

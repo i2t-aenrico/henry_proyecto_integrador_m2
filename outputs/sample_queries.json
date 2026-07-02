@@ -1,0 +1,27 @@
+[
+  {
+    "user_question": "¿Cómo saco turno para renovar la licencia de conducir y qué me conviene saber antes de ir?",
+    "system_answer": "Para renovar tu licencia de conducir primero tenés que sacar un turno online desde la sección de turnos del sitio web municipal, eligiendo el sector de licencias de conducir; vas a recibir un comprobante por correo con fecha, horario y documentación necesaria. Si tu renovación es estándar y no tuviste infracciones graves, el trámite suele ser simple. Pero si en el último año cometiste faltas graves o gravísimas, no avisaste cambios de datos dentro de los 90 días de producidos, o dejaste vencer la licencia por más de 365 días, vas a tener que asistir a charlas obligatorias (Ética y Derecho, Accidentología, Educación Vial) y aprobar los exámenes teórico, práctico y psíquico. Además, tené en cuenta que se pagan tres conceptos: la tasa municipal, el arancel del Colegio de Médicos y el CENAT, este último con al menos 72 horas de anticipación al turno.",
+    "chunks_related": [
+      {"chunk_id": "chunk_001", "score": 0.61, "text": "1. ¿Cómo saco un turno para un trámite municipal en Santa Fe capital?\nLos trámites presenciales en la Municipalidad de Santa Fe requieren turno previo. El turno se solicita de forma online desde la sección de turnos del sitio web municipal, eligiendo el sector correspondiente (licencias de conducir, tributos, cementerio, entre otros). Una vez confirmado, el sistema envía un comprobante por correo electrónico con fecha, horario y documentación necesaria."},
+      {"chunk_id": "chunk_005", "score": 0.78, "text": "5. ¿Qué diferencia hay entre el trámite de licencia por primera vez y la renovación?\nLa renovación estándar suele ser más simple si no hubo infracciones graves. Sin embargo, si la persona cometió faltas graves o gravísimas en el año previo, no comunicó cambios de datos dentro de los 90 días de producidos, o dejó vencer la licencia por más de 365 días, deberá asistir a charlas obligatorias de Ética y Derecho, Accidentología y Educación Vial, además de aprobar los exámenes teórico, práctico y psíquico."},
+      {"chunk_id": "chunk_006", "score": 0.55, "text": "6. ¿Qué costos tiene la licencia de conducir en Santa Fe?\nSe abonan tres conceptos: una tasa municipal por costo administrativo, un arancel del Colegio de Médicos por el control médico, y el monto correspondiente al Certificado Nacional de Antecedentes de Tránsito (CENAT) que fija la Agencia Nacional de Seguridad Vial. El CENAT debe pagarse con al menos 72 horas de anticipación al turno."}
+    ]
+  },
+  {
+    "user_question": "Vivo de alquiler y no tengo el DNI actualizado con esa dirección, ¿puedo sacar igual el certificado de domicilio?",
+    "system_answer": "Sí, podés sacarlo igual. Cuando el domicilio a certificar no coincide con el que figura en tu DNI, además de presentar el DNI tenés que llevar el contrato de locación a tu nombre con el domicilio que querés declarar, o una boleta de impuesto o servicio a tu nombre con esa misma dirección. Como alternativa, también se puede acreditar el domicilio presentándote con dos testigos mayores de edad que lleven su DNI. Este trámite se hace de forma personal en el Registro Civil y no tiene costo.",
+    "chunks_related": [
+      {"chunk_id": "chunk_012", "score": 0.82, "text": "12. ¿Qué necesito si el domicilio a certificar no coincide con el del DNI?\nAdemás del DNI, hay que presentar un contrato de locación a nombre del solicitante con el domicilio a declarar, o una boleta de impuesto o servicio a su nombre con ese domicilio. También se puede acreditar con dos testigos mayores de edad que concurran con su DNI."},
+      {"chunk_id": "chunk_010", "score": 0.69, "text": "10. ¿Qué es un certificado de domicilio y para qué se usa?\nEs un documento que acredita el lugar donde vive una persona, útil para presentar ante otros organismos públicos o privados que lo requieran. En Santa Fe, la emisión de certificados de domicilio a través del Registro Civil es un trámite gratuito y se realiza de manera personal."},
+      {"chunk_id": "chunk_013", "score": 0.47, "text": "13. ¿Cómo se tramita un certificado de domicilio para un menor de edad?\nDebe presentarse el padre, madre, tutor o encargado legal de forma personal. Si el domicilio del representante coincide con el del menor, alcanza con los DNI de ambos. Si no coincide, se debe acreditar el domicilio con contrato de locación, boleta de servicios o licencia de conducir a nombre del solicitante, además de dos testigos con DNI."}
+    ]
+  },
+  {
+    "user_question": "¿Cuánto sale sacar el pasaporte en Santa Fe y en cuántos días lo entregan?",
+    "system_answer": "No tengo información suficiente sobre eso en la base de FAQ disponible. Puedo ayudarte con trámites de DNI, certificados de domicilio, licencia de conducir y otros trámites municipales o provinciales, pero no cuento con datos sobre costos ni plazos de entrega del pasaporte.",
+    "chunks_related": [
+      {"chunk_id": "chunk_016", "score": 0.31, "text": "16. ¿Qué trámites cubre el Registro Civil de Santa Fe?\nEl Registro Civil se ocupa de la inscripción de nacimientos, matrimonios, uniones convivenciales y defunciones, así como de la emisión de partidas y certificados de domicilio y supervivencia. También cuenta con Centros de Documentación Rápida para trámites digitalizados de DNI y pasaporte."}
+    ]
+  }
+]

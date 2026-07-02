@@ -1,0 +1,8 @@
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+outputs/index/*.json
+metrics/*.csv
+logs/*.jsonl
+!.gitkeep
