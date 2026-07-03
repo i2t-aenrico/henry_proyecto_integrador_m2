@@ -31,48 +31,126 @@ from vector_store import load_index, search
 
 
 def embed_query(question: str) -> list[float]:
-    """Genera el embedding de la pregunta con el mismo proveedor del índice."""
+    """Genera el embedding de la pregunta con el mismo proveedor del índice.
+
+    Args:
+        question: pregunta del usuario en texto plano.
+
+    Returns:
+        Vector (lista de floats) que representa la pregunta.
+    """
     return embed_texts([question])[0]
 
 
 def retrieve_chunks(question: str, index_path: str, top_k: int) -> list[dict]:
-    """Recupera los top_k chunks más relevantes para la pregunta, desde un único índice."""
+    """Recupera los top_k chunks más relevantes para la pregunta, desde un único índice.
+
+    Args:
+        question: pregunta del usuario.
+        index_path: ruta al archivo de índice de un dataset puntual
+            (ej: outputs/index/faq_macro_index.json).
+        top_k: cantidad máxima de chunks a devolver.
+
+    Returns:
+        Lista de chunks ordenados por similitud descendente (ver
+        vector_store.search).
+    """
     query_vector = embed_query(question)
     index = load_index(index_path)
     return search(query_vector, index, top_k=top_k)
 
 
-def retrieve_chunks_all_datasets(question: str, index_dir: str, top_k: int) -> list[dict]:
-    """Busca en TODOS los índices disponibles en index_dir y devuelve los
-    top_k globales, sin importar de qué dataset provengan.
+def retrieve_chunks_all_datasets(
+    question: str, index_dir: str, top_k: int, min_per_dataset: int = 3
+) -> list[dict]:
+    """Busca en TODOS los índices disponibles en index_dir.
 
-    Se busca top_k dentro de cada índice individual y luego se combinan y
-    reordenan todos los resultados por score, quedándonos con los top_k
-    finales. Esto evita perder un buen match de un dataset chico frente a
-    uno con muchos chunks.
+    A diferencia de un simple top-k global, esta función GARANTIZA que al
+    menos `min_per_dataset` chunks de cada dataset entren al resultado final
+    (si existen candidatos), en vez de dejar que un dataset con matches muy
+    fuertes tape por completo a los demás. Los lugares restantes (hasta
+    completar el tamaño final) se rellenan con los mejores candidatos
+    globales que hayan quedado afuera de la garantía.
+
+    Esto evita el problema detectado en el benchmark: una pregunta genérica
+    ("¿cuánto cuesta reparar algo que compré?") competía en similitud contra
+    chunks de un dataset dominante y los chunks realmente relevantes de otros
+    datasets (ej. reparaciones de Yam o Hothaus) quedaban afuera del top-k
+    global aunque estuvieran entre los mejores de su propio dataset.
+
+    Con min_per_dataset=1 alcanzaba con que el chunk correcto fuera el MEJOR
+    match dentro de su propio dataset, algo que no siempre pasa con preguntas
+    genéricas (el chunk correcto puede ser el 2do o 3er mejor localmente).
+    Por eso se garantizan los top-`min_per_dataset` locales de cada dataset,
+    no solo el primero.
+
+    El tamaño final es max(top_k, cantidad_de_datasets * min_per_dataset),
+    para que siempre haya lugar para todos los chunks garantizados.
+
+    Args:
+        question: pregunta del usuario.
+        index_dir: carpeta donde están todos los índices (uno por dataset).
+        top_k: tamaño "deseado" del resultado; puede crecer si hace falta
+            para alojar la garantía por dataset (ver total_final).
+        min_per_dataset: cantidad mínima de chunks locales a garantizar por
+            cada dataset, sin importar cómo compitan globalmente en score.
+
+    Returns:
+        Lista de chunks combinados de todos los datasets, ordenados por
+        score descendente, de tamaño total_final.
+
+    Raises:
+        FileNotFoundError: si no hay ningún índice en index_dir (todavía no
+            se corrió build_index.py para ningún dataset).
     """
     index_paths = sorted(glob.glob(f"{index_dir}/*_index.json"))
     if not index_paths:
         raise FileNotFoundError(f"No se encontraron índices en {index_dir}")
 
     query_vector = embed_query(question)
-    combined: list[dict] = []
-    seen: set[tuple[str, str]] = set()
+    total_final = max(top_k, len(index_paths) * min_per_dataset)
+
+    pool: dict[tuple[str, str], dict] = {}
+    garantizados: list[dict] = []
+
     for path in index_paths:
         index = load_index(path)
-        for chunk in search(query_vector, index, top_k=top_k):
+        local_matches = search(query_vector, index, top_k=max(top_k, min_per_dataset))
+        for chunk in local_matches:
             key = (chunk.get("source", ""), chunk["chunk_id"])
-            if key in seen:
-                continue
-            seen.add(key)
-            combined.append(chunk)
+            pool[key] = chunk  # dedup automático si dos índices compartieran un chunk
+        garantizados.extend(local_matches[:min_per_dataset])
 
-    combined.sort(key=lambda c: c["score"], reverse=True)
-    return combined[:top_k]
+    vistos: set[tuple[str, str]] = set()
+    garantizados_unicos: list[dict] = []
+    for chunk in garantizados:
+        key = (chunk.get("source", ""), chunk["chunk_id"])
+        if key not in vistos:
+            vistos.add(key)
+            garantizados_unicos.append(chunk)
+
+    restantes = sorted(
+        (chunk for key, chunk in pool.items() if key not in vistos),
+        key=lambda c: c["score"],
+        reverse=True,
+    )
+    faltan = max(total_final - len(garantizados_unicos), 0)
+    combinados = garantizados_unicos + restantes[:faltan]
+    combinados.sort(key=lambda c: c["score"], reverse=True)
+    return combinados[:total_final]
 
 
 def build_prompt(question: str, chunks: list[dict]) -> str:
-    """Arma el prompt de usuario con la pregunta y los chunks recuperados."""
+    """Arma el prompt de usuario con la pregunta y los chunks recuperados.
+
+    Args:
+        question: pregunta original del usuario.
+        chunks: chunks recuperados por retrieve_chunks o
+            retrieve_chunks_all_datasets.
+
+    Returns:
+        Texto final del prompt de usuario, listo para pasarle a call_llm.
+    """
     return TEMPLATE_USUARIO.format(
         pregunta=question,
         chunks_formateados=formatear_chunks(chunks),
@@ -85,6 +163,18 @@ def generate_answer(question: str, chunks: list[dict], multi_source: bool = Fals
     Usa el prompt de sistema multi-fuente cuando la búsqueda combinó varios
     datasets, para que el modelo indique explícitamente de qué organización
     proviene cada dato usado en la respuesta.
+
+    Args:
+        question: pregunta original del usuario.
+        chunks: chunks recuperados que forman el contexto de la respuesta.
+        multi_source: True si los chunks vienen de retrieve_chunks_all_datasets
+            (dataset="all"), para elegir SYSTEM_ASISTENTE_MULTI en vez del
+            prompt de sistema de un único dominio.
+
+    Returns:
+        Tupla (answer, llm_result): answer es el texto de respuesta ya
+        extraído del JSON crudo del LLM; llm_result es el diccionario con
+        texto crudo, tokens de uso, proveedor, modelo y latencia (ver llm.py).
     """
     user_prompt = build_prompt(question, chunks)
     system_prompt = SYSTEM_ASISTENTE_MULTI if multi_source else SYSTEM_ASISTENTE
@@ -105,6 +195,19 @@ def answer_question(question: str, dataset: str = "faq_document", evaluate: bool
 
     Si evaluate=True, además llama al agente evaluador (bonus, sprint 2)
     y registra su veredicto en metrics/evaluations.csv y logs/evaluations.jsonl.
+
+    Args:
+        question: pregunta del usuario en texto plano.
+        dataset: nombre del dataset a consultar, o "all" para buscar en
+            todos a la vez.
+        evaluate: si es True, corre además el agente evaluador sobre la
+            respuesta generada.
+
+    Returns:
+        Diccionario con user_question, system_answer y chunks_related (y,
+        si evaluate=True, también la clave evaluation con puntaje y
+        justificación). Es el mismo diccionario que se imprime como JSON
+        en main() y que se muestra en la interfaz web (app.py).
     """
     settings = get_settings()
     multi_source = dataset == "all"
@@ -135,6 +238,8 @@ def answer_question(question: str, dataset: str = "faq_document", evaluate: bool
 
 
 def main() -> None:
+    """Punto de entrada de línea de comandos: parsea argumentos, corre
+    answer_question y muestra el resultado como JSON en stdout."""
     parser = argparse.ArgumentParser(description="Consulta el FAQ mediante RAG")
     parser.add_argument("-q", "--question", required=True)
     parser.add_argument(

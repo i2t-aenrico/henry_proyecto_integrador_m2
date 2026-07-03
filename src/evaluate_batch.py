@@ -17,6 +17,21 @@ from metrics_writer import registrar_evaluacion
 
 
 def evaluate_file(input_path: str, output_path: str) -> None:
+    """Corre el agente evaluador sobre cada item de un archivo de ejemplos.
+
+    Lee una lista de objetos {user_question, system_answer, chunks_related}
+    (típicamente outputs/sample_queries.json, generado a mano o con
+    query.py), evalúa cada uno con evaluate_answer, registra el veredicto
+    en las métricas agregadas (metrics/evaluations.csv y
+    logs/evaluations.jsonl) y guarda el archivo completo con el campo
+    "evaluation" agregado a cada item.
+
+    Args:
+        input_path: ruta al archivo JSON de entrada con los ejemplos a
+            evaluar.
+        output_path: ruta donde guardar el archivo de salida con las
+            evaluaciones ya agregadas a cada item.
+    """
     with open(input_path, encoding="utf-8") as f:
         items = json.load(f)
 

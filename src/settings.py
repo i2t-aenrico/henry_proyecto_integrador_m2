@@ -34,7 +34,18 @@ class Settings:
 
 @lru_cache
 def get_settings() -> Settings:
-    """Devuelve la configuración cacheada (una sola lectura del entorno)."""
+    """Devuelve la configuración cacheada (una sola lectura del entorno).
+
+    Usa lru_cache para que todos los módulos del proyecto compartan la
+    misma instancia de Settings sin releer el .env en cada llamada. Cada
+    variable tiene un valor por defecto razonable, así que el proyecto
+    funciona incluso con un .env incompleto (por ejemplo, corriendo
+    100% con EMBEDDING_PROVIDER=local sin ninguna API key).
+
+    Returns:
+        Instancia de Settings con todos los valores de configuración ya
+        resueltos desde las variables de entorno (o sus defaults).
+    """
     return Settings(
         embedding_provider=os.getenv("EMBEDDING_PROVIDER", "local"),
         openai_api_key=os.getenv("OPENAI_API_KEY"),

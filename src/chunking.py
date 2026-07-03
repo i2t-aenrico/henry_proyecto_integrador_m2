@@ -34,18 +34,47 @@ def estimate_tokens(text: str) -> int:
 
     Se usa un factor de 1.3 palabras->tokens, una aproximación razonable
     para español sin depender de un tokenizador específico de modelo.
+
+    Args:
+        text: texto sobre el que estimar la cantidad de tokens.
+
+    Returns:
+        Cantidad estimada de tokens (entero).
     """
     return int(len(text.split()) * 1.3)
 
 
 def split_into_paragraphs(text: str) -> list[str]:
-    """Divide el documento en párrafos usando líneas en blanco como límite."""
+    """Divide el documento en párrafos usando líneas en blanco como límite.
+
+    Args:
+        text: contenido completo del documento fuente.
+
+    Returns:
+        Lista de párrafos (strings), sin líneas en blanco ni espacios
+        sobrantes al principio/final de cada uno.
+    """
     raw_blocks = text.split("\n\n")
     return [b.strip() for b in raw_blocks if b.strip()]
 
 
 def merge_short_paragraphs(paragraphs: list[str]) -> list[str]:
-    """Fusiona párrafos que quedarían por debajo de MIN_TOKENS con el siguiente."""
+    """Fusiona párrafos que quedarían por debajo de MIN_TOKENS con el siguiente.
+
+    Recorre los párrafos en orden, acumulándolos en un buffer hasta que la
+    cantidad de tokens acumulados alcanza MIN_TOKENS; en ese momento cierra
+    el bloque y empieza uno nuevo. Si al final queda un resto corto sin
+    llegar al mínimo, se anexa al último bloque ya cerrado (o se agrega
+    solo, si todavía no se cerró ningún bloque).
+
+    Args:
+        paragraphs: lista de párrafos ya separados por split_into_paragraphs.
+
+    Returns:
+        Lista de bloques de texto, cada uno con al menos MIN_TOKENS tokens
+        (excepto, potencialmente, un único bloque si el documento entero
+        fuera más corto que MIN_TOKENS).
+    """
     merged: list[str] = []
     buffer = ""
     for para in paragraphs:
@@ -63,7 +92,19 @@ def merge_short_paragraphs(paragraphs: list[str]) -> list[str]:
 
 
 def split_oversized_paragraph(paragraph: str) -> list[str]:
-    """Fallback: ventana de tamaño fijo con solapamiento para párrafos largos."""
+    """Fallback: ventana de tamaño fijo con solapamiento para párrafos largos.
+
+    Se activa solo si un bloque supera MAX_TOKENS luego del merge de
+    párrafos cortos. Parte el texto en ventanas de palabras de tamaño fijo
+    con un solapamiento de OVERLAP_TOKENS entre una ventana y la siguiente,
+    para no perder contexto en los bordes de cada corte.
+
+    Args:
+        paragraph: bloque de texto que excede MAX_TOKENS.
+
+    Returns:
+        Lista de fragmentos de texto, cada uno dentro del límite de tamaño.
+    """
     words = paragraph.split()
     step = int(MAX_TOKENS / 1.3) - int(OVERLAP_TOKENS / 1.3)
     window = int(MAX_TOKENS / 1.3)
@@ -76,7 +117,23 @@ def split_oversized_paragraph(paragraph: str) -> list[str]:
 
 
 def chunk_document(text: str, source: str = "faq_document.txt") -> list[Chunk]:
-    """Ejecuta el pipeline completo de chunking sobre el documento FAQ."""
+    """Ejecuta el pipeline completo de chunking sobre el documento FAQ.
+
+    Etapas: (1) separar en párrafos por líneas en blanco, (2) fusionar los
+    párrafos cortos con el siguiente hasta cumplir el mínimo de tokens,
+    (3) si algún bloque resultante supera el máximo, subdividirlo con
+    ventana + solapamiento (fallback), y (4) envolver cada bloque final en
+    un objeto Chunk con su id secuencial y su fuente de origen.
+
+    Args:
+        text: contenido completo del documento fuente ya leído.
+        source: nombre del archivo de origen, para trazabilidad de cada
+            chunk cuando se combinan varios documentos (ver build_index.py).
+
+    Returns:
+        Lista de objetos Chunk, cada uno con chunk_id, text, token_count y
+        source.
+    """
     paragraphs = split_into_paragraphs(text)
     merged = merge_short_paragraphs(paragraphs)
 

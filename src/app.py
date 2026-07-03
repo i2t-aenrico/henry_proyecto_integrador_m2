@@ -27,7 +27,13 @@ from settings import get_settings
 
 
 def _available_datasets() -> list[str]:
-    """Lista los datasets ya indexados, a partir de los archivos en outputs/index/."""
+    """Lista los datasets ya indexados, a partir de los archivos en outputs/index/.
+
+    Returns:
+        Lista de nombres de dataset (ej: ["faq_agn", "faq_document",
+        "faq_hothaus", "faq_macro", "faq_yam"]), sin el sufijo "_index.json".
+        Vacía si todavía no se corrió build_index.py para ningún archivo.
+    """
     settings = get_settings()
     paths = sorted(glob.glob(f"{settings.index_dir}/*_index.json"))
     datasets = []
@@ -39,12 +45,25 @@ def _available_datasets() -> list[str]:
 
 
 def _etiqueta(dataset: str) -> str:
-    """Nombre legible para mostrar en el dropdown, ej: faq_macro -> Banco Macro."""
+    """Nombre legible para mostrar en el dropdown, ej: faq_macro -> Banco Macro.
+
+    Args:
+        dataset: nombre interno del dataset (sin extensión), ej: "faq_macro".
+
+    Returns:
+        Nombre legible según FUENTES_LEGIBLES, o el nombre original si no
+        hay traducción configurada para ese dataset.
+    """
     return FUENTES_LEGIBLES.get(f"{dataset}.txt", dataset)
 
 
 def _dataset_choices() -> list[tuple[str, str]]:
-    """Devuelve pares (etiqueta visible, valor real) para el dropdown de Gradio."""
+    """Devuelve pares (etiqueta visible, valor real) para el dropdown de Gradio.
+
+    Returns:
+        Lista de tuplas (etiqueta, valor); la primera opción es siempre
+        "Todos los FAQ" -> "all", seguida por cada dataset ya indexado.
+    """
     datasets = _available_datasets()
     choices = [("Todos los FAQ", "all")]
     choices += [(_etiqueta(d), d) for d in datasets]
@@ -52,6 +71,18 @@ def _dataset_choices() -> list[tuple[str, str]]:
 
 
 def _formatear_chunk(chunk: dict) -> str:
+    """Convierte un chunk en un bloque de Markdown legible para la interfaz.
+
+    Trunca el texto a 260 caracteres para no saturar el panel de detalle
+    cuando hay muchos chunks (por ejemplo, en modo "Todos los FAQ").
+
+    Args:
+        chunk: diccionario de chunk (chunk_id, score, text, source).
+
+    Returns:
+        String en Markdown con fuente, chunk_id, similitud y un resumen
+        del texto.
+    """
     fuente = FUENTES_LEGIBLES.get(chunk.get("source", ""), chunk.get("source", "desconocida"))
     texto = chunk["text"]
     resumen = texto if len(texto) <= 260 else texto[:260].rstrip() + "…"
@@ -59,7 +90,22 @@ def _formatear_chunk(chunk: dict) -> str:
 
 
 def preguntar(pregunta: str, dataset: str, evaluar: bool) -> tuple[str, str]:
-    """Ejecuta el pipeline de RAG y devuelve (respuesta, detalle_de_chunks)."""
+    """Ejecuta el pipeline de RAG y devuelve (respuesta, detalle_de_chunks).
+
+    Es el callback que se dispara al hacer click en "Preguntar" (o Enter en
+    el campo de pregunta). Reutiliza directamente answer_question de
+    query.py, sin duplicar lógica de retrieval ni de generación.
+
+    Args:
+        pregunta: texto ingresado en el campo de pregunta.
+        dataset: valor del dropdown ("all" o el nombre de un dataset puntual).
+        evaluar: estado del checkbox de evaluación.
+
+    Returns:
+        Tupla (respuesta, detalle): respuesta es el texto para el textbox
+        de "Respuesta"; detalle es el Markdown con los chunks usados (y,
+        si evaluar=True, el veredicto del agente evaluador al final).
+    """
     if not pregunta or not pregunta.strip():
         return "Escribí una pregunta antes de consultar.", ""
     if not dataset:
@@ -86,6 +132,7 @@ def preguntar(pregunta: str, dataset: str, evaluar: bool) -> tuple[str, str]:
 
 
 def main() -> None:
+    """Arma el layout de Gradio (Blocks) y levanta el servidor local."""
     choices = _dataset_choices()
     valor_default = choices[0][1] if choices else None
 

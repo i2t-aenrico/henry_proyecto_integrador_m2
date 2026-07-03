@@ -1,0 +1,350 @@
+{
+  "resumen": {
+    "total_preguntas": 30,
+    "tiempo_total_ms": 168897.5,
+    "promedio_ms": 5629.9,
+    "mediana_ms": 4623.6,
+    "min_ms": 2287.7,
+    "max_ms": 25089.3,
+    "por_dataset": {
+      "faq_document": {
+        "cantidad": 6,
+        "promedio_ms": 8715.8,
+        "min_ms": 4457.6,
+        "max_ms": 25089.3
+      },
+      "faq_agn": {
+        "cantidad": 5,
+        "promedio_ms": 6262.9,
+        "min_ms": 3804.0,
+        "max_ms": 11270.9
+      },
+      "faq_yam": {
+        "cantidad": 5,
+        "promedio_ms": 3891.6,
+        "min_ms": 2287.7,
+        "max_ms": 6072.0
+      },
+      "faq_hothaus": {
+        "cantidad": 5,
+        "promedio_ms": 3880.3,
+        "min_ms": 3170.4,
+        "max_ms": 4764.0
+      },
+      "faq_macro": {
+        "cantidad": 5,
+        "promedio_ms": 5736.7,
+        "min_ms": 3775.2,
+        "max_ms": 7647.7
+      },
+      "all": {
+        "cantidad": 4,
+        "promedio_ms": 4436.3,
+        "min_ms": 3375.9,
+        "max_ms": 6579.4
+      }
+    }
+  },
+  "resultados": [
+    {
+      "n": 1,
+      "dataset": "faq_document",
+      "question": "¿Cómo consigo un turno para hacer un trámite en la Municipalidad de Santa Fe?",
+      "duracion_ms": 25089.3,
+      "answer": "¡Hola! Para sacar un turno y hacer un trámite presencial en la Municipalidad de Santa Fe, el proceso es bastante sencillo:\n\n1. **Ingresá al sitio web municipal** y buscá la sección de turnos online.\n2. **Elegí el sector** que necesitás (por ejemplo: licencias de conducir, tributos, cementerio, etc.).\n3. **Solicitá el turno de forma online** y, una vez confirmado, el sistema te enviará un comprobante por correo electrónico con la fecha, el horario y la documentación que tenés que llevar.\n\nTambién podés usar la **Oficina Virtual municipal**, disponible las 24 horas, donde además de gestionar turnos podés iniciar trámites, consultar requisitos y adjuntar documentación digital sin tener que ir físicamente a las oficinas. Algunos trámites son públicos y no requieren registro, pero otros sí necesitan que tengas una **Clave Ciudadana**.\n\n¿Necesitás ayuda con algún trámite en particular? 😊",
+      "top_chunk_source": "faq_document.txt",
+      "top_chunk_score": 0.838790237903595,
+      "error": null
+    },
+    {
+      "n": 2,
+      "dataset": "faq_document",
+      "question": "¿Qué es la Oficina Virtual de la Municipalidad de Santa Fe?",
+      "duracion_ms": 5790.3,
+      "answer": "¡Buena pregunta! La Oficina Virtual de la Municipalidad de Santa Fe es una plataforma digital disponible las 24 horas del día, los 7 días de la semana. Fue pensada para que los vecinos puedan iniciar, consultar y hacer seguimiento de trámites municipales sin necesidad de ir físicamente a las oficinas.\n\nEntre sus principales funciones podés:\n- Ver los requisitos de cada trámite.\n- Adjuntar documentación de forma digital.\n- Gestionar turnos.\n- Hacer seguimiento de expedientes ya iniciados (filtrando por fecha, año o estado).\n\nAlgunos trámites son públicos y no necesitan registro, pero otros requieren tener una **Clave Ciudadana** para acceder. Por ejemplo, para ver el detalle de tus expedientes en curso necesitás estar registrado con esa clave.\n\nEn resumen, es una herramienta muy útil para resolver trámites desde tu casa, a cualquier hora. ¿Necesitás ayuda con algún trámite en particular?",
+      "top_chunk_source": "faq_document.txt",
+      "top_chunk_score": 0.8297698497772217,
+      "error": null
+    },
+    {
+      "n": 3,
+      "dataset": "faq_document",
+      "question": "¿Cuáles son los pasos para sacar la licencia de conducir por primera vez?",
+      "duracion_ms": 6444.7,
+      "answer": "¡Hola! Acá te explico los pasos para sacar la licencia de conducir por primera vez en Santa Fe:\n\n1. **Curso Nacional de Educación Vial Digital**: Lo primero que tenés que hacer es completar este curso de forma online y aprobarlo.\n\n2. **Solicitar turno**: Una vez aprobado el curso, pedís turno para iniciar el trámite administrativo.\n\n3. **El día del turno**: Concurrís con la documentación requerida y realizás:\n   - El control médico\n   - La fotografía\n   - El examen teórico-práctico correspondiente a la clase de licencia que estés solicitando\n\nUn dato importante: una vez que iniciás el trámite, tenés **un año** para completar todos los pasos. Si no lo finalizás dentro de ese plazo, tendrías que empezar de nuevo desde el principio.\n\nSi tenés dudas sobre los documentos específicos que hay que llevar o los costos del trámite, te recomiendo consultar directamente en el organismo municipal correspondiente, ya que no cuento con esa información detallada en la base disponible. ¡Éxitos con el trámite!",
+      "top_chunk_source": "faq_document.txt",
+      "top_chunk_score": 0.6040085554122925,
+      "error": null
+    },
+    {
+      "n": 4,
+      "dataset": "faq_document",
+      "question": "¿Qué costos tiene la licencia de conducir en Santa Fe?",
+      "duracion_ms": 5129.2,
+      "answer": "Para sacar o renovar la licencia de conducir en Santa Fe, tenés que abonar tres conceptos distintos:\n\n1. **Tasa municipal**: corresponde al costo administrativo del trámite.\n2. **Arancel del Colegio de Médicos**: es por el control médico obligatorio.\n3. **CENAT (Certificado Nacional de Antecedentes de Tránsito)**: su monto lo fija la Agencia Nacional de Seguridad Vial. Importante: este pago debe realizarse **con al menos 72 horas de anticipación** a tu turno.\n\nEn cuanto a los montos exactos, no cuento con esa información en la base de datos disponible, ya que los valores pueden actualizarse. Te recomiendo consultar directamente en la Municipalidad de Santa Fe o en la Oficina Virtual municipal para conocer los importes vigentes al momento de hacer el trámite.",
+      "top_chunk_source": "faq_document.txt",
+      "top_chunk_score": 0.8227909803390503,
+      "error": null
+    },
+    {
+      "n": 5,
+      "dataset": "faq_document",
+      "question": "¿Cómo puedo saber si tengo multas de tránsito impagas?",
+      "duracion_ms": 4457.6,
+      "answer": "Para saber si tenés multas de tránsito impagas en Santa Fe, tenés dos opciones:\n\n1. **En línea**: Podés consultarlo a través del **Sistema de Juzgamiento y Administración de Infracciones de la provincia (SIJAI)**, que está disponible de forma online.\n\n2. **De manera presencial**: Podés acercarte al **Centro de Educación Vial** para hacer la consulta en persona.\n\nTené en cuenta que tener multas impagas puede afectarte a la hora de renovar la licencia de conducir, así que conviene regularizar esa situación antes de iniciar ese trámite. ¡Espero que te sea útil!",
+      "top_chunk_source": "faq_document.txt",
+      "top_chunk_score": 0.724457323551178,
+      "error": null
+    },
+    {
+      "n": 6,
+      "dataset": "faq_document",
+      "question": "¿Qué necesito para tramitar un certificado de domicilio si no coincide con mi DNI?",
+      "duracion_ms": 5383.6,
+      "answer": "¡Buenas! Para tramitar un certificado de domicilio cuando el domicilio que querés certificar **no coincide** con el que figura en tu DNI, necesitás presentarte personalmente con lo siguiente:\n\n1. **Tu DNI**, y además una de estas opciones para acreditar el domicilio:\n   - Un **contrato de locación** a tu nombre con ese domicilio, **o**\n   - Una **boleta de impuesto o servicio** (como luz, agua, gas, etc.) a tu nombre con ese domicilio, **o**\n   - **Dos testigos mayores de edad** que concurran contigo y presenten su DNI.\n\nRecordá que este trámite es **gratuito** y se realiza de forma personal en el Registro Civil. ¡Espero que te sea de ayuda!",
+      "top_chunk_source": "faq_document.txt",
+      "top_chunk_score": 0.7903919219970703,
+      "error": null
+    },
+    {
+      "n": 7,
+      "dataset": "faq_agn",
+      "question": "¿Qué es el Archivo General de la Nación?",
+      "duracion_ms": 3804.0,
+      "answer": "El Archivo General de la Nación (AGN) es el organismo encargado de resguardar la documentación generada por la Administración Pública Nacional, es decir, los papeles producidos por ministerios, secretarías y entes autárquicos del Poder Ejecutivo. Su misión es reunir, organizar y preservar ese material para que pueda ser consultado como fuente histórica sobre el país.\n\nSi te interesa saber más, el AGN funciona en tres sedes en la Ciudad Autónoma de Buenos Aires, atiende de lunes a viernes de 10 a 16 horas, y la consulta en sala es gratuita para cualquier persona mayor de 18 años con turno previo y DNI.",
+      "top_chunk_source": "faq_agn.txt",
+      "top_chunk_score": 0.8514872193336487,
+      "error": null
+    },
+    {
+      "n": 8,
+      "dataset": "faq_agn",
+      "question": "¿Cuáles son los horarios de atención del Archivo General de la Nación?",
+      "duracion_ms": 4421.6,
+      "answer": "El Archivo General de la Nación (AGN) atiende al público de **lunes a viernes, de 10 a 16 horas**, durante todo el año. Los fines de semana y los días feriados permanece cerrado.\n\nTené en cuenta que si querés consultar documentación de forma presencial, necesitás reservar un turno previo a través del sistema de turnos del organismo, y presentar tu DNI. La consulta en sala es gratuita y está abierta a cualquier persona mayor de 18 años.\n\nAclaración: el AGN es un organismo nacional (depende del Ministerio del Interior de la Nación) y no forma parte de los trámites municipales o provinciales de Santa Fe, por lo que para consultas específicas te recomendamos contactarlos directamente.",
+      "top_chunk_source": "faq_agn.txt",
+      "top_chunk_score": 0.8059099316596985,
+      "error": null
+    },
+    {
+      "n": 9,
+      "dataset": "faq_agn",
+      "question": "¿Las copias de documentos del AGN tienen costo?",
+      "duracion_ms": 6986.5,
+      "answer": "Sí, las copias de documentos del AGN pueden tener costo dependiendo del tipo de material que solicites. Te cuento cómo funciona:\n\n- **Copias en alta resolución (fotografías, audios y videos):** Son pagas. El precio se calcula con una fórmula oficial que combina un monto fijo según el tipo de material (por ejemplo, minuto de video, minuto de audio o unidad fotográfica) más un monto adicional según la cantidad solicitada. Si necesitás la entrega en 5 días hábiles (trámite expreso), el arancel se duplica.\n\n- **Documentación sin costo:** Algunos documentos pueden pedirse de forma gratuita y a distancia, como los expedientes sucesorios entre 1630 y 1900, y los decretos del Poder Ejecutivo Nacional emitidos entre 1947 y 2016.\n\n- **Certificaciones:** Si necesitás una certificación de documentos del acervo del AGN, esa gestión no tiene costo y se realiza en formato electrónico.\n\n- **Consulta en sala:** La consulta presencial tampoco tiene costo, aunque requiere turno previo y presentar DNI.\n\nEn resumen, si querés copias digitales en alta resolución de fotos, audios o videos, deberás abonar un arancel; pero hay varias opciones gratuitas según el tipo de documento que necesites.",
+      "top_chunk_source": "faq_agn.txt",
+      "top_chunk_score": 0.7072590589523315,
+      "error": null
+    },
+    {
+      "n": 10,
+      "dataset": "faq_agn",
+      "question": "¿Es obligatorio declarar documentos históricos que tengo en mi casa?",
+      "duracion_ms": 11270.9,
+      "answer": "¡Buena pregunta! Según la información disponible, **sí puede ser obligatorio** declarar documentos históricos que tenés en tu casa, pero depende del tipo de documentos:\n\n- **Documentos vinculados a asuntos públicos con más de 30 años de antigüedad**: en ese caso, la ley exige declararlos ante el organismo correspondiente.\n- **Documentos de carácter estrictamente familiar**: estos quedan **fuera** de la obligación de declaración.\n\nEs importante tenerlo en cuenta, porque también existe una normativa que sanciona el daño a documentación de archivos o museos públicos, con penas de entre 3 meses y 4 años de prisión según el Código Penal.\n\nSi tenés dudas sobre si tus documentos entran en la categoría que requiere declaración, te recomiendo consultar directamente con el Archivo General de la Nación (AGN), que dispone de una plataforma de contacto para este tipo de consultas.\n\nTené en cuenta que esta información proviene del AGN (organismo nacional), por lo que si tu consulta refiere específicamente a trámites municipales o provinciales de Santa Fe, no tengo información suficiente sobre eso en la base de FAQ disponible.",
+      "top_chunk_source": "faq_agn.txt",
+      "top_chunk_score": 0.7882081866264343,
+      "error": null
+    },
+    {
+      "n": 11,
+      "dataset": "faq_agn",
+      "question": "¿El AGN certifica documentos?",
+      "duracion_ms": 4831.6,
+      "answer": "¡Sí! El AGN emite certificaciones de documentos, pero con una condición importante: solo puede certificar documentación que pertenezca a su propio acervo (es decir, los documentos que él mismo resguarda). No certifica documentos externos o de otras instituciones.\n\nAdemás, hay buenas noticias en cuanto al proceso:\n- La certificación se realiza en formato **electrónico**, a través del sistema de Gestión Documental Electrónica (GDE).\n- Es **gratuita**, no tiene costo.\n\nSi tenés alguna consulta adicional que no esté cubierta por esta información, el AGN también pone a disposición una plataforma de contacto para recibir consultas.",
+      "top_chunk_source": "faq_agn.txt",
+      "top_chunk_score": 0.6610243320465088,
+      "error": null
+    },
+    {
+      "n": 12,
+      "dataset": "faq_yam",
+      "question": "¿Cuánto tarda en procesarse mi pedido en Yam?",
+      "duracion_ms": 3304.8,
+      "answer": "¡Buenas! En Yam, cada pieza se fabrica a medida una vez que realizás tu pedido, así que el proceso no es inmediato. El plazo de producción es de aproximadamente 8 días, y los pedidos se despachan en orden de llegada. Por el momento, no existe la opción de envío urgente. Si necesitás la pieza para una fecha específica, te recomiendan consultar los locales que revenden la marca o considerar la compra de una tarjeta de regalo.",
+      "top_chunk_source": "faq_yam.txt",
+      "top_chunk_score": 0.5832210779190063,
+      "error": null
+    },
+    {
+      "n": 13,
+      "dataset": "faq_yam",
+      "question": "¿Yam hace envíos internacionales?",
+      "duracion_ms": 2826.4,
+      "answer": "¡Sí, Yam realiza envíos internacionales! Si al momento de finalizar tu compra no aparece disponible el envío hacia tu país, podés escribirle directamente a la tienda para que habiliten esa ubicación. Eso sí, tené en cuenta que los costos de aduana y aranceles de importación corren por tu cuenta como comprador.",
+      "top_chunk_source": "faq_yam.txt",
+      "top_chunk_score": 0.7451367378234863,
+      "error": null
+    },
+    {
+      "n": 14,
+      "dataset": "faq_yam",
+      "question": "¿Cuál es la política de devoluciones de Yam?",
+      "duracion_ms": 4967.2,
+      "answer": "¡Hola! Te cuento cómo funciona la política de devoluciones de Yam:\n\n- **Plazo:** Tenés hasta 10 días desde la fecha de entrega registrada para iniciar una devolución.\n- **Forma de reintegro:** No se devuelve dinero. Las devoluciones se resuelven como **cambio por otro producto** o como **crédito para futuras compras**.\n- **Cómo iniciar el proceso:** Hay que completar un formulario disponible en el sitio de la tienda y enviar el producto bien embalado.\n- **Costo del envío:** El envío de devolución corre por cuenta del cliente. Yam no se responsabiliza por pérdidas o daños durante el transporte.\n- **Artículos en oferta:** No admiten devolución bajo ninguna circunstancia.\n\nSi tenés alguna duda adicional, te recomiendo contactar directamente a la tienda. ¡Espero que te haya sido útil!",
+      "top_chunk_source": "faq_yam.txt",
+      "top_chunk_score": 0.5921542644500732,
+      "error": null
+    },
+    {
+      "n": 15,
+      "dataset": "faq_yam",
+      "question": "Necesito reparar una joya que compré, ¿cómo hago?",
+      "duracion_ms": 6072.0,
+      "answer": "¡Claro que sí! Para gestionar la reparación de tu joya, estos son los pasos a seguir:\n\n1. **Completá el formulario de reparaciones** disponible en el sitio web de la tienda Yam.\n\n2. **¿Tiene costo?** Depende de cuándo realizaste la compra:\n   - Si fue dentro de los **últimos 30 días**, la reparación es **sin costo**.\n   - Si pasó ese plazo, el costo varía según el tipo y la gravedad del daño.\n\n3. **Tiempo estimado:** La reparación tarda entre **1 y 2 semanas**.\n\n4. **Envío del producto:** El envío de la joya hacia la tienda corre por tu cuenta. Asegurate de empacarla muy bien, ya que la tienda no se hace responsable por pérdidas o daños ocurridos durante el transporte.\n\n¡Espero que puedan arreglarte la joya sin problemas! 😊",
+      "top_chunk_source": "faq_yam.txt",
+      "top_chunk_score": 0.6344459056854248,
+      "error": null
+    },
+    {
+      "n": 16,
+      "dataset": "faq_yam",
+      "question": "¿Con qué empresas de correo envía Yam los pedidos?",
+      "duracion_ms": 2287.7,
+      "answer": "Yam realiza sus envíos a través de dos empresas de correo: **USPS** y **UPS**. Si tenés alguna consulta sobre el seguimiento de tu pedido, podés contactar a la tienda por correo electrónico.",
+      "top_chunk_source": "faq_yam.txt",
+      "top_chunk_score": 0.5880604982376099,
+      "error": null
+    },
+    {
+      "n": 17,
+      "dataset": "faq_hothaus",
+      "question": "¿Puedo alquilar el equipamiento del estudio Hothaus?",
+      "duracion_ms": 4764.0,
+      "answer": "¡Sí, podés alquilar el equipamiento del estudio Hothaus! Eso sí, hay dos condiciones importantes:\n\n1. **Experiencia previa**: Tenés que ser un artista del vidrio con experiencia en el área.\n2. **Inducción**: Antes de poder usar el equipamiento, debés completar un proceso breve de inducción.\n\nSi todavía no tenés experiencia pero te interesa aprender a usar el equipo, podés contactar al estudio para que te coticen clases individuales de entrenamiento.\n\nTené en cuenta que Hothaus es un estudio de vidrio artístico ubicado en Australia, por lo que esta información no corresponde a trámites municipales o provinciales de Santa Fe, Argentina. Si tenés alguna consulta sobre trámites locales, con gusto te ayudo con eso también.",
+      "top_chunk_source": "faq_hothaus.txt",
+      "top_chunk_score": 0.6707587838172913,
+      "error": null
+    },
+    {
+      "n": 18,
+      "dataset": "faq_hothaus",
+      "question": "¿Hothaus dicta clases de sopletado de vidrio?",
+      "duracion_ms": 3170.4,
+      "answer": "¡Sí! Hothaus dicta clases de sopletado de vidrio (así como trabajo en frío y trabajo a la llama). Ofrecen cursos tanto para principiantes como para nivel intermedio. Si querés saber cuál se adapta mejor a tu nivel, podés consultar la sección de reserva de clases en su sitio web o escribirles por correo electrónico para que te orienten.",
+      "top_chunk_source": "faq_hothaus.txt",
+      "top_chunk_score": 0.6424592733383179,
+      "error": null
+    },
+    {
+      "n": 19,
+      "dataset": "faq_hothaus",
+      "question": "¿Cuánto cuesta el envío internacional de Hothaus?",
+      "duracion_ms": 3905.2,
+      "answer": "Hola, antes de responder quiero aclararte que Hothaus es un estudio de vidrio artístico de Australia, no un trámite municipal ni provincial de Santa Fe (Argentina). Igualmente, con la información disponible puedo decirte que el envío internacional de Hothaus tiene una tarifa fija de 50 dólares australianos. El envío dentro de Australia, en cambio, cuesta 15 dólares australianos e incluye el embalaje. Si tenés alguna consulta sobre trámites de Santa Fe, con gusto te ayudo.",
+      "top_chunk_source": "faq_hothaus.txt",
+      "top_chunk_score": 0.6296221017837524,
+      "error": null
+    },
+    {
+      "n": 20,
+      "dataset": "faq_hothaus",
+      "question": "¿Hothaus hace reparaciones de piezas de vidrio?",
+      "duracion_ms": 3358.7,
+      "answer": "Según la información disponible de Hothaus, en este momento el estudio **no está tomando nuevos trabajos de reparación** de piezas de vidrio. Sin embargo, si lo que necesitás es otro tipo de trabajo —como esmerilado, pulido o la creación de una pieza a medida—, sí podrían ayudarte. Te recomiendo contactarlos directamente para consultar si la situación cambió o para explorar otras opciones.",
+      "top_chunk_source": "faq_hothaus.txt",
+      "top_chunk_score": 0.6982912421226501,
+      "error": null
+    },
+    {
+      "n": 21,
+      "dataset": "faq_hothaus",
+      "question": "¿Aceptan devoluciones en Hothaus?",
+      "duracion_ms": 4203.0,
+      "answer": "En Hothaus no se aceptan devoluciones ni cambios por arrepentimiento de compra. Todas las ventas son definitivas.\n\nSin embargo, si tu pieza llega rota o dañada durante el envío, el estudio te pide que saques fotos y te contactes con ellos por correo electrónico de inmediato. En ese caso, pueden ofrecerte un reembolso o el reemplazo de la pieza.\n\nTe recuerdo que Hothaus es un estudio de vidrio artístico de Australia, por lo que esta información no corresponde a trámites municipales o provinciales de Santa Fe, Argentina. Si tenés alguna consulta sobre trámites locales, con gusto te ayudo.",
+      "top_chunk_source": "faq_hothaus.txt",
+      "top_chunk_score": 0.5978913903236389,
+      "error": null
+    },
+    {
+      "n": 22,
+      "dataset": "faq_macro",
+      "question": "¿Cómo genero el Token de Seguridad de Banco Macro?",
+      "duracion_ms": 7647.7,
+      "answer": "¡Hola! Te explico paso a paso cómo generar tu Token de Seguridad de Banco Macro:\n\n**¿Qué es el Token de Seguridad?**\nEs el método de seguridad que reemplaza a las preguntas de seguridad tradicionales. Genera códigos de 6 dígitos desde tu celular, que te van a pedir cada vez que operes por la App Macro o por Banca Internet.\n\n**Paso 1 – En el cajero automático Banelco (disponible las 24 horas):**\n1. Ingresá por la opción **Claves**.\n2. Elegí la opción de **generación del Token de Seguridad**.\n3. Cargá tu número de documento.\n4. Definí una **clave de 6 dígitos** y confirmála una segunda vez.\n5. Guardá el ticket que te imprime el cajero, ¡lo vas a necesitar!\n\n**Paso 2 – En la App Macro (dentro de las 24 horas):**\n- Antes de loguearte, terminá de activar el Token ingresando los mismos datos que usaste en el cajero.\n\n⚠️ Es importante completar este segundo paso dentro de las 24 horas, y recordar bien la clave que definiste.\n\n¿Necesitás ayuda con algún otro trámite?",
+      "top_chunk_source": "faq_macro.txt",
+      "top_chunk_score": 0.7681729793548584,
+      "error": null
+    },
+    {
+      "n": 23,
+      "dataset": "faq_macro",
+      "question": "¿Dónde puedo consultar mi CBU?",
+      "duracion_ms": 3775.2,
+      "answer": "Para consultar tu CBU (Clave Bancaria Uniforme) tenés varias opciones:\n\n1. **Desde la App Macro o Banca Internet**: Ingresá con tu usuario y clave, entrá a tu cuenta y buscá la opción \"Mi CBU\". Si todavía no estás registrado en los canales digitales, el sistema te pedirá algunas preguntas de validación la primera vez que intentes ingresar.\n\n2. **Desde un cajero automático**: También podés consultar tu CBU directamente desde cualquier cajero automático.\n\nEspero que te sea de ayuda. ¡Cualquier otra consulta, no dudes en preguntar!",
+      "top_chunk_source": "faq_macro.txt",
+      "top_chunk_score": 0.6044342517852783,
+      "error": null
+    },
+    {
+      "n": 24,
+      "dataset": "faq_macro",
+      "question": "Se me bloqueó el PIN de mi tarjeta de débito, ¿cómo lo desbloqueo?",
+      "duracion_ms": 5472.3,
+      "answer": "¡Hola! Para desbloquear el PIN de tu tarjeta de débito, podés hacerlo de manera digital sin necesidad de ir a una sucursal. Los pasos son los siguientes:\n\n1. **Ingresá a la App Macro o a Banca Internet.**\n2. **Buscá la opción \"Gestión de Claves\"** dentro de la aplicación o plataforma.\n3. Desde ahí podrás realizar el desbloqueo del PIN.\n\n⚠️ **Importante:** Para completar este proceso, necesitás tener el **Token de Seguridad activo**. Si todavía no lo activaste, primero tenés que generarlo siguiendo el procedimiento correspondiente antes de poder desbloquear el PIN.\n\nSi tenés alguna duda adicional sobre cómo activar el Token, te recomiendo consultar directamente con Banco Macro. ¡Espero que te sea de ayuda!",
+      "top_chunk_source": "faq_macro.txt",
+      "top_chunk_score": 0.8065292239189148,
+      "error": null
+    },
+    {
+      "n": 25,
+      "dataset": "faq_macro",
+      "question": "¿Los cajeros automáticos cobran comisión?",
+      "duracion_ms": 4483.3,
+      "answer": "Sí, desde el 1 de abril de 2021, el Banco Central de la República Argentina dispuso que las operaciones en cajeros automáticos vuelvan a tener costo. Sin embargo, hay una excepción importante: si sos titular de una tarjeta de débito asociada a una cuenta sueldo, jubilación o plan social, podés usar cajeros de cualquier banco o red de forma gratuita sobre el monto total de tu salario, jubilación o prestación social.\n\nTe aclaro que esta información corresponde a Banco Macro y no es específica de trámites municipales o provinciales de Santa Fe. Si tenés dudas sobre comisiones particulares de tu cuenta, te recomiendo consultar directamente con tu banco.",
+      "top_chunk_source": "faq_macro.txt",
+      "top_chunk_score": 0.6895143985748291,
+      "error": null
+    },
+    {
+      "n": 26,
+      "dataset": "faq_macro",
+      "question": "¿Cómo pido la devolución de un pago de tarjeta ya debitado?",
+      "duracion_ms": 7305.1,
+      "answer": "¡Claro que sí! Si el resumen de tu tarjeta ya fue debitado y querés pedir la devolución de ese importe, podés hacerlo presentándote en una sucursal del banco con turno online previo. Tené en cuenta estos puntos importantes:\n\n- **Plazo para solicitarlo:** tenés hasta **30 días corridos** desde la fecha en que se realizó el débito.\n- **Acreditación:** el dinero vuelve a tu cuenta en un plazo máximo de **72 horas hábiles**.\n- **¡Ojo con esto!** Ese importe que te devuelven vuelve a sumarse como deuda en el próximo resumen. Es decir, no desaparece, sino que se posterga. Si además el pedido lo hacés después del cierre del resumen, esa deuda se suma directamente al saldo del resumen siguiente.\n\nTambién podés iniciar este trámite (reverso de pago) a través de **Banca Internet** o en una sucursal con turno previo. Recordá que si el monto impago queda sin cubrir, pueden generarse intereses de financiación y la tarjeta puede inhabilitarse automáticamente si no se paga al menos el mínimo.\n\nEn resumen: ¡actuá dentro de los 30 días y sacá turno antes de ir a la sucursal!",
+      "top_chunk_source": "faq_macro.txt",
+      "top_chunk_score": 0.7064699530601501,
+      "error": null
+    },
+    {
+      "n": 27,
+      "dataset": "all",
+      "question": "¿Cómo pago mi tarjeta de crédito?",
+      "duracion_ms": 6579.4,
+      "answer": "Según Banco Macro, tu tarjeta de crédito puede pagarse de las siguientes formas:\n\n- **App Macro**: desde la aplicación móvil del banco.\n- **Banca Internet**: a través del sitio web del banco.\n- **Pago Mis Cuentas / Pagos Link**: plataformas de pago externas compatibles.\n\nSi anteriormente pagabas por ventanilla, estas opciones digitales son las alternativas disponibles actualmente.\n\nAdemás, si querés consultar el resumen de tu tarjeta para saber cuánto debés pagar, también podés hacerlo desde la App Macro o Banca Internet. En caso de que no tengas clave para esos canales digitales, primero deberás generarla.\n\nUn consejo importante: si no cubrís al menos el pago mínimo, la tarjeta se inhibe automáticamente y se generan intereses de financiación sobre el monto impago, así que conviene no dejarlo sin abonar.",
+      "top_chunk_source": "faq_macro.txt",
+      "top_chunk_score": 0.68378746509552,
+      "error": null
+    },
+    {
+      "n": 28,
+      "dataset": "all",
+      "question": "¿Hacen envíos internacionales?",
+      "duracion_ms": 4409.8,
+      "answer": "¡Sí, hay opciones de envíos internacionales disponibles!\n\n- **Según Yam:** realizan envíos internacionales. Si al finalizar la compra no aparece habilitado el envío a tu país de destino, podés escribirles directamente para solicitarlo. Tené en cuenta que los costos de aduana y aranceles de importación corren por cuenta del comprador.\n\n- **Según Hothaus:** también ofrecen envío internacional, con una tarifa fija de 50 dólares australianos.\n\nSi tu consulta es sobre otra organización o tienda en particular, no cuento con información suficiente al respecto en las bases disponibles.",
+      "top_chunk_source": "faq_yam.txt",
+      "top_chunk_score": 0.8009974956512451,
+      "error": null
+    },
+    {
+      "n": 29,
+      "dataset": "all",
+      "question": "¿Cuánto cuesta reparar algo que compré?",
+      "duracion_ms": 3375.9,
+      "answer": "Lo siento, no tengo información suficiente sobre el costo de reparación de productos en las bases de FAQ disponibles. Los fragmentos recuperados corresponden a temas de Banco Macro (pagos de tarjetas y préstamos), Trámites de Santa Fe (licencia de conducir) y Yam (envíos de paquetes), ninguno de los cuales aborda el tema de reparaciones de productos comprados. Te recomendaría consultar directamente con el vendedor o fabricante del producto para obtener esa información.",
+      "top_chunk_source": "faq_macro.txt",
+      "top_chunk_score": 0.5493870973587036,
+      "error": null
+    },
+    {
+      "n": 30,
+      "dataset": "all",
+      "question": "¿Cuál es la capital de Francia?",
+      "duracion_ms": 3380.1,
+      "answer": "Lo siento, no tengo información sobre la capital de Francia en las bases de FAQ disponibles. Los documentos que consulto están relacionados con trámites y servicios de organizaciones como el Archivo General de la Nación, Banco Macro, Trámites de Santa Fe y Yam, por lo que no puedo responder preguntas de geografía general. Te recomiendo consultar una fuente de información general para obtener esa respuesta.",
+      "top_chunk_source": "faq_agn.txt",
+      "top_chunk_score": 0.5062234997749329,
+      "error": null
+    }
+  ]
+}

@@ -24,13 +24,31 @@ from vector_store import save_index
 
 
 def load_document(path: str) -> str:
-    """Lee el documento fuente de texto plano."""
+    """Lee el documento fuente de texto plano.
+
+    Args:
+        path: ruta al archivo .txt a indexar.
+
+    Returns:
+        Contenido completo del archivo como string (codificado en UTF-8).
+    """
     with open(path, encoding="utf-8") as f:
         return f.read()
 
 
 def build_chunk_records(chunks) -> list[dict]:
-    """Convierte los objetos Chunk en diccionarios serializables."""
+    """Convierte los objetos Chunk (dataclass) en diccionarios serializables.
+
+    Necesario porque el índice se persiste como JSON, y los objetos Chunk
+    de chunking.py no son serializables directamente.
+
+    Args:
+        chunks: lista de objetos Chunk devueltos por chunk_document.
+
+    Returns:
+        Lista de diccionarios con chunk_id, text, token_count y source
+        (sin el embedding todavía; eso lo agrega attach_embeddings).
+    """
     return [
         {
             "chunk_id": c.chunk_id,
@@ -43,7 +61,19 @@ def build_chunk_records(chunks) -> list[dict]:
 
 
 def attach_embeddings(records: list[dict]) -> list[dict]:
-    """Genera embeddings para todos los chunks y los adjunta a cada registro."""
+    """Genera embeddings para todos los chunks y los adjunta a cada registro.
+
+    Hace una única llamada a embed_texts con todos los textos juntos (en
+    vez de uno por uno), para aprovechar el procesamiento por lotes tanto
+    en la API de OpenAI como en el modelo local de Sentence-Transformers.
+
+    Args:
+        records: lista de diccionarios de chunk (salida de build_chunk_records).
+
+    Returns:
+        La misma lista de records, mutada in-place, con un campo
+        "embedding" (lista de floats) agregado a cada uno.
+    """
     texts = [r["text"] for r in records]
     vectors = embed_texts(texts)
     for record, vector in zip(records, vectors):
@@ -56,12 +86,35 @@ def index_path_for(input_path: str, index_dir: str) -> str:
 
     data/faq_macro.txt  -> {index_dir}/faq_macro_index.json
     data/faq_document.txt -> {index_dir}/faq_document_index.json
+
+    Esto permite mantener un índice independiente por cada dataset, sin
+    que uno pise el archivo de otro al correr build_index.py varias veces.
+
+    Args:
+        input_path: ruta del documento fuente indexado (usa el nombre base,
+            sin extensión, para armar el nombre del índice).
+        index_dir: carpeta donde se guardan todos los índices.
+
+    Returns:
+        Ruta completa del archivo de índice para ese dataset.
     """
     stem = Path(input_path).stem
     return f"{index_dir}/{stem}_index.json"
 
 
 def main(input_path: str = "data/faq_document.txt", output_path: str | None = None) -> None:
+    """Orquesta el pipeline de datos completo para un único documento fuente.
+
+    Etapas: (1) leer el archivo, (2) chunkear el texto, (3) generar
+    embeddings para todos los chunks, y (4) guardar chunks + embeddings en
+    el índice correspondiente a ese dataset.
+
+    Args:
+        input_path: ruta al documento .txt a indexar.
+        output_path: ruta explícita para el índice de salida. Si es None
+            (default), se deriva automáticamente del nombre de input_path
+            mediante index_path_for.
+    """
     settings = get_settings()
     start = time.time()
 

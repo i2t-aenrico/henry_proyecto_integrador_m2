@@ -37,7 +37,22 @@ PRICING = {
 
 
 def estimate_cost(provider: str, model: str, input_tokens: int, output_tokens: int) -> float:
-    """Calcula el costo aproximado de una llamada según tokens reales de uso."""
+    """Calcula el costo aproximado de una llamada según tokens reales de uso.
+
+    Usa precios de referencia hardcodeados en PRICING (USD por millón de
+    tokens). Si el par (provider, model) no está en la tabla, devuelve 0.0
+    en vez de fallar, para no romper el registro de métricas por un modelo
+    no contemplado.
+
+    Args:
+        provider: nombre del proveedor ("anthropic" u "openai").
+        model: nombre del modelo usado.
+        input_tokens: tokens de entrada consumidos.
+        output_tokens: tokens de salida generados.
+
+    Returns:
+        Costo estimado en USD, redondeado a 6 decimales.
+    """
     price_in, price_out = PRICING.get((provider, model), (0.0, 0.0))
     return round((input_tokens * price_in + output_tokens * price_out) / 1_000_000, 6)
 
@@ -48,6 +63,13 @@ def was_answered(answer_text: str) -> bool:
     Se considera "no respondida" cuando el propio LLM indica que no tiene
     información suficiente. Este criterio simple queda documentado para
     que el sprint 2 lo reemplace por el agente evaluador.
+
+    Args:
+        answer_text: texto de la respuesta generada por el asistente.
+
+    Returns:
+        True si la respuesta parece contener información real; False si
+        contiene alguna de las frases que indican falta de información.
     """
     marcadores_no_respuesta = [
         "no tengo información suficiente",
@@ -64,7 +86,18 @@ def registrar_metrica(
     chunks_related: list[dict],
     llm_result: dict,
 ) -> None:
-    """Escribe la métrica en CSV y el detalle completo en el log JSONL."""
+    """Escribe la métrica en CSV y el detalle completo en el log JSONL.
+
+    Se llama una vez por cada consulta procesada en answer_question
+    (query.py), tanto si la pregunta pudo responderse como si no.
+
+    Args:
+        user_question: pregunta original del usuario.
+        system_answer: respuesta generada por el asistente.
+        chunks_related: chunks recuperados y usados como contexto.
+        llm_result: diccionario de métricas de uso devuelto por call_llm
+            (tokens, latencia, proveedor, modelo).
+    """
     os.makedirs(os.path.dirname(METRICS_CSV), exist_ok=True)
     os.makedirs(os.path.dirname(QUERIES_LOG), exist_ok=True)
 
@@ -83,6 +116,7 @@ def registrar_metrica(
 
 
 def _append_csv_row(timestamp, user_question, answered, top_chunk, llm_result, cost) -> None:
+    """Agrega una fila a metrics/metrics.csv, escribiendo el header si el archivo es nuevo."""
     file_exists = os.path.exists(METRICS_CSV)
     with open(METRICS_CSV, "a", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=CSV_HEADERS)
@@ -104,6 +138,7 @@ def _append_csv_row(timestamp, user_question, answered, top_chunk, llm_result, c
 
 
 def _append_jsonl_row(timestamp, user_question, system_answer, chunks_related, answered, llm_result, cost) -> None:
+    """Agrega una línea JSON a logs/queries.jsonl con el detalle completo de la consulta."""
     row = {
         "timestamp": timestamp,
         "user_question": user_question,
@@ -131,7 +166,18 @@ EVAL_CSV_HEADERS = [
 
 
 def registrar_evaluacion(user_question: str, evaluacion, llm_result: dict) -> None:
-    """Registra el veredicto del agente evaluador en CSV y en el log JSONL."""
+    """Registra el veredicto del agente evaluador en CSV y en el log JSONL.
+
+    Análogo a registrar_metrica, pero para las evaluaciones del agente
+    evaluador (bonus, sprint 2). Se llama desde answer_question cuando
+    evaluate=True, y desde evaluate_batch.py al evaluar un archivo entero.
+
+    Args:
+        user_question: pregunta original evaluada.
+        evaluacion: instancia de EvaluacionRespuesta (puntaje + justificación).
+        llm_result: diccionario de métricas de uso de la llamada al LLM
+            evaluador (tokens, latencia, proveedor, modelo).
+    """
     os.makedirs(os.path.dirname(EVALUATIONS_CSV), exist_ok=True)
     os.makedirs(os.path.dirname(EVALUATIONS_LOG), exist_ok=True)
 

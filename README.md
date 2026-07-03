@@ -95,9 +95,12 @@ separado (ver sección "Ejecución"), y `query.py` permite consultar una sola o 
 a la vez con `--dataset all`.
 
 Cuando se consulta con `--dataset all`, la búsqueda se hace contra todos los
-índices disponibles en `outputs/index/`, se combinan los resultados por
-similitud (deduplicando por `source` + `chunk_id` para no repetir chunks si
-hay índices superpuestos) y se usa un prompt de sistema distinto
+índices disponibles en `outputs/index/`, garantizando que **al menos un
+chunk de cada dataset** entre al contexto final (no solo un top-k global),
+para que una fuente con matches muy fuertes no tape a las demás. Los lugares
+que sobren se completan con los mejores candidatos restantes por similitud.
+Además se deduplica por `source` + `chunk_id` para no repetir chunks si hay
+índices superpuestos. Se usa un prompt de sistema distinto
 (`SYSTEM_ASISTENTE_MULTI`) que le pide al modelo identificar explícitamente
 de qué organización proviene cada dato usado en la respuesta (por ejemplo:
 "Según Banco Macro..."). El campo `source` de cada chunk queda visible en el
@@ -116,6 +119,16 @@ JSON de salida para poder auditar la procedencia.
   descartan chunks repetidos (mismo `source` + `chunk_id`) al fusionar los
   resultados de varios índices. Dentro de un único dataset no hace falta,
   porque cada `chunk_id` es único por construcción.
+- **Representación garantizada por dataset** (`--dataset all`): en vez de un
+  top-k puramente global, se garantizan al menos los 3 mejores chunks locales
+  de cada dataset en el resultado final (no solo el top-1: el chunk correcto
+  para una pregunta genérica puede no ser el mejor match dentro de su propio
+  dataset, sino el 2do o 3ro), completando los lugares restantes con los
+  mejores candidatos globales por score. Esto evita que una pregunta ambigua
+  entre varios dominios (ej. "¿cuánto cuesta reparar algo que compré?")
+  pierda la información correcta de un dataset con matches más débiles frente
+  a otro dataset con chunks de score más alto pero no relacionados. El tamaño
+  final es `max(top_k, cantidad_de_datasets × 3)`.
 
 ---
 
@@ -237,6 +250,30 @@ uv run python src/app.py
 ```
 
 Ver detalles en la sección "Interfaz web (Gradio)" más arriba.
+
+### Benchmark de tiempos de respuesta
+
+Para probar el sistema con un lote de preguntas variadas (incluye las 5 bases
+de FAQ y algunas consultas cruzadas con `--dataset all`) y medir el tiempo de
+respuesta de punta a punta de cada una:
+
+```bash
+uv run python src/benchmark.py
+```
+
+Corre las 30 preguntas de `data/preguntas_prueba.json`, imprime el tiempo de
+cada una en la terminal y guarda el detalle completo (pregunta, respuesta,
+fuente y score del chunk principal, duración en ms) más un resumen agregado
+(promedio, mediana, mínimo, máximo, y desglose por dataset) en
+`outputs/benchmark_results.json`.
+
+```bash
+# Usar tu propio archivo de preguntas
+uv run python src/benchmark.py --input data/mis_preguntas.json
+
+# Correr también el agente evaluador sobre cada respuesta (más lento)
+uv run python src/benchmark.py --evaluate
+```
 
 ### Salida de ejemplo
 

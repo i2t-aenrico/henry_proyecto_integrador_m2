@@ -80,7 +80,21 @@ FUENTES_LEGIBLES = {
 
 
 def formatear_chunks(chunks: list[dict]) -> str:
-    """Arma el bloque de contexto con procedencia para insertar en el prompt."""
+    """Arma el bloque de contexto con procedencia para insertar en el prompt.
+
+    Le agrega a cada chunk su fuente en formato legible (usando
+    FUENTES_LEGIBLES) además del chunk_id y el score, para que el modelo
+    pueda citar explícitamente de qué organización sale cada dato cuando
+    se usa el prompt multi-fuente (SYSTEM_ASISTENTE_MULTI).
+
+    Args:
+        chunks: lista de chunks recuperados (con chunk_id, score, text y
+            source).
+
+    Returns:
+        Texto con todos los chunks formateados y separados por líneas en
+        blanco, listo para insertar en TEMPLATE_USUARIO.
+    """
     partes = []
     for c in chunks:
         fuente = FUENTES_LEGIBLES.get(c.get("source", ""), c.get("source", "desconocida"))

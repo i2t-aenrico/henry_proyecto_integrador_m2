@@ -1,0 +1,37 @@
+[
+  {"dataset": "faq_document", "question": "¿Cómo consigo un turno para hacer un trámite en la Municipalidad de Santa Fe?"},
+  {"dataset": "faq_document", "question": "¿Qué es la Oficina Virtual de la Municipalidad de Santa Fe?"},
+  {"dataset": "faq_document", "question": "¿Cuáles son los pasos para sacar la licencia de conducir por primera vez?"},
+  {"dataset": "faq_document", "question": "¿Qué costos tiene la licencia de conducir en Santa Fe?"},
+  {"dataset": "faq_document", "question": "¿Cómo puedo saber si tengo multas de tránsito impagas?"},
+  {"dataset": "faq_document", "question": "¿Qué necesito para tramitar un certificado de domicilio si no coincide con mi DNI?"},
+
+  {"dataset": "faq_agn", "question": "¿Qué es el Archivo General de la Nación?"},
+  {"dataset": "faq_agn", "question": "¿Cuáles son los horarios de atención del Archivo General de la Nación?"},
+  {"dataset": "faq_agn", "question": "¿Las copias de documentos del AGN tienen costo?"},
+  {"dataset": "faq_agn", "question": "¿Es obligatorio declarar documentos históricos que tengo en mi casa?"},
+  {"dataset": "faq_agn", "question": "¿El AGN certifica documentos?"},
+
+  {"dataset": "faq_yam", "question": "¿Cuánto tarda en procesarse mi pedido en Yam?"},
+  {"dataset": "faq_yam", "question": "¿Yam hace envíos internacionales?"},
+  {"dataset": "faq_yam", "question": "¿Cuál es la política de devoluciones de Yam?"},
+  {"dataset": "faq_yam", "question": "Necesito reparar una joya que compré, ¿cómo hago?"},
+  {"dataset": "faq_yam", "question": "¿Con qué empresas de correo envía Yam los pedidos?"},
+
+  {"dataset": "faq_hothaus", "question": "¿Puedo alquilar el equipamiento del estudio Hothaus?"},
+  {"dataset": "faq_hothaus", "question": "¿Hothaus dicta clases de sopletado de vidrio?"},
+  {"dataset": "faq_hothaus", "question": "¿Cuánto cuesta el envío internacional de Hothaus?"},
+  {"dataset": "faq_hothaus", "question": "¿Hothaus hace reparaciones de piezas de vidrio?"},
+  {"dataset": "faq_hothaus", "question": "¿Aceptan devoluciones en Hothaus?"},
+
+  {"dataset": "faq_macro", "question": "¿Cómo genero el Token de Seguridad de Banco Macro?"},
+  {"dataset": "faq_macro", "question": "¿Dónde puedo consultar mi CBU?"},
+  {"dataset": "faq_macro", "question": "Se me bloqueó el PIN de mi tarjeta de débito, ¿cómo lo desbloqueo?"},
+  {"dataset": "faq_macro", "question": "¿Los cajeros automáticos cobran comisión?"},
+  {"dataset": "faq_macro", "question": "¿Cómo pido la devolución de un pago de tarjeta ya debitado?"},
+
+  {"dataset": "all", "question": "¿Cómo pago mi tarjeta de crédito?"},
+  {"dataset": "all", "question": "¿Hacen envíos internacionales?"},
+  {"dataset": "all", "question": "¿Cuánto cuesta reparar algo que compré?"},
+  {"dataset": "all", "question": "¿Cuál es la capital de Francia?"}
+]
